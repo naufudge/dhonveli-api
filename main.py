@@ -13,7 +13,7 @@ origins = ["http://localhost:3000", "http://localhost:3001"]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins = ["*"],
+    allow_origins = origins,
     allow_credentials = True,
     allow_methods = ["*"],
     allow_headers = ["*"],
@@ -40,13 +40,13 @@ db_dependency = Annotated[Session, Depends(get_db)]
 
 @app.post("/users/", status_code=status.HTTP_201_CREATED)
 async def create_user(user: UserBase, db: db_dependency):
-    db_user = models.Users(**user.model_dump())
+    db_user = models.User(**user.model_dump())
     db.add(db_user)
     db.commit()
 
 @app.get("/users/{user_id}", status_code=status.HTTP_200_OK)
 async def read_user(user_id: int, db: db_dependency):
-    user = db.query(models.Users).filter(models.Users.id == user_id).first()
+    user = db.query(models.User).filter(models.Users.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     else:
