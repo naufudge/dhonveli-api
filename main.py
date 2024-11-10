@@ -4,15 +4,17 @@ from typing import Annotated
 from sqlalchemy.orm import Session
 from database import engine, SessionLocal
 import models
+import pymysql
 
 app = FastAPI()
 models.Base.metadata.create_all(bind=engine)
+pymysql.install_as_MySQLdb()
 
 class UserBase(BaseModel):
     username: str
     password: str
-    loyalty_points = int
-    role = str
+    loyalty_points: int
+    role: str
 
 def get_db():
     db = SessionLocal()

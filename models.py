@@ -1,5 +1,8 @@
 from sqlalchemy import Column, Integer, String, Float, DateTime
 from database import Base
+import pymysql
+
+pymysql.install_as_MySQLdb()
 
 class User(Base):
     __tablename__ = "user"
