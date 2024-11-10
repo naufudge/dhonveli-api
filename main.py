@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException, Depends, status
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Annotated
 from sqlalchemy.orm import Session
@@ -6,7 +7,17 @@ from database import engine, SessionLocal
 import models
 import pymysql
 
-app = FastAPI()
+app = FastAPI(title="Dhonveli API")
+
+origins = ["http://localhost:3000", "http://localhost:3001"]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins = origins,
+    allow_credentials = True,
+    allow_methods = ["*"],
+    allow_headers = ["*"],
+)
+
 pymysql.install_as_MySQLdb()
 models.Base.metadata.create_all(bind=engine)
 
