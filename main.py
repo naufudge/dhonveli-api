@@ -7,8 +7,8 @@ import models
 import pymysql
 
 app = FastAPI()
-models.Base.metadata.create_all(bind=engine)
 pymysql.install_as_MySQLdb()
+models.Base.metadata.create_all(bind=engine)
 
 class UserBase(BaseModel):
     username: str
