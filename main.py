@@ -1,12 +1,10 @@
 from fastapi import FastAPI, HTTPException, Depends, status
 from pydantic import BaseModel
 from typing import Annotated
-import pymysql
 from sqlalchemy.orm import Session
 from database import engine, SessionLocal
 import models
 
-pymysql.install_as_MySQLdb()
 app = FastAPI()
 models.Base.metadata.create_all(bind=engine)
 
