@@ -13,6 +13,7 @@ models.Base.metadata.create_all(bind=engine)
 class UserBase(BaseModel):
     username: str
     password: str
+    email: set
     loyalty_points: int
     role: str
 
