@@ -1,5 +1,6 @@
 fastapi
 uvicorn
 sqlalchemy
+mysqlclient
 pymysql
 python-dotenv
