@@ -22,7 +22,7 @@ class Hotel(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(50))
-    number_of_rooms = Column(Integer)
+    room_count = Column(Integer)
 
 class HotelBooking(Base):
     __tablename__ = "hotel_booking"
@@ -61,7 +61,6 @@ class Room(Base):
     room_type_id = Column(Integer, ForeignKey("room_type.id", ondelete="CASCADE"), nullable=False)
     room_type = relationship("RoomType")
     
-    hotel_id = Column(Integer, ForeignKey("hotel.id", ondelete="CASCADE"), nullable=False)  
 
 class RoomType(Base):
     __tablename__ = "room_type"
@@ -70,9 +69,10 @@ class RoomType(Base):
     name = Column(String(20))
     price = Column(Float)
     bed_count = Column(Integer)
+    quantity = Column(Integer)
 
     hotel_id = Column(Integer, ForeignKey("hotel.id", ondelete="CASCADE"), nullable=False)
-    hotel = relationship("Hotel")
+    hotel = relationship("Hotel", back_populates="hotel")
 
 class Review(Base):
     __tablename__ = "review"

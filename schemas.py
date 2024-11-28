@@ -1,4 +1,6 @@
 from pydantic import BaseModel
+from typing import List, Dict
+
 
 class UserBase(BaseModel):
     username: str
@@ -8,5 +10,11 @@ class UserBase(BaseModel):
     role: str
 
 
-class Hotel(BaseModel):
+class CreateHotel(BaseModel):
     name: str
+    rooms: List[Dict[str, str | int | float]]
+
+class ViewHotel(BaseModel):
+    name: str
+    room_count: int
+    

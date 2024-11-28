@@ -47,12 +47,31 @@ async def read_user(username: str, db: db_dependency):
 
 
 @app.post("/hotels/", status_code=status.HTTP_201_CREATED)
-async def add_hotel(hotel: Hotel, db: db_dependency):
-    db_hotel = models.Hotel(**hotel.model_dump())
+async def add_hotel(hotel: CreateHotel, db: db_dependency):
+    room_count = 0
+    for room in hotel.rooms:
+        room_count += room["quantity"]
+        
+    db_hotel = models.Hotel(name=hotel.name, room_count=room_count)
+    
     db.add(db_hotel)
     db.commit()
 
-@app.get("/hotels/", response_model=List[Hotel],  status_code=status.HTTP_200_OK)
+    room_types = [
+        models.RoomType(
+            name=room["name"],
+            price=room["price"],
+            bed_count=room["bed_count"],
+            quantity=room["quantity"],
+            hotel_id=db_hotel.id
+        ) for room in hotel.rooms
+    ]
+
+    db.add_all(room_types)
+    db.commit()
+
+
+@app.get("/hotels/", response_model=List[ViewHotel],  status_code=status.HTTP_200_OK)
 async def get_hotels(db: db_dependency):
     hotels = db.query(models.Hotel).all()
     if not hotels:
