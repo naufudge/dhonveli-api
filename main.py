@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException, Depends, status
 from fastapi.middleware.cors import CORSMiddleware
 from schemas import *
-from typing import Annotated
+from typing import Annotated, List
 from sqlalchemy.orm import Session
 from database import engine, SessionLocal
 import models
@@ -31,6 +31,7 @@ def get_db():
 
 db_dependency = Annotated[Session, Depends(get_db)]
 
+
 @app.post("/users/", status_code=status.HTTP_201_CREATED)
 async def create_user(user: UserBase, db: db_dependency):
     db_user = models.User(**user.model_dump())
@@ -42,17 +43,19 @@ async def read_user(username: str, db: db_dependency):
     user = db.query(models.User).filter(models.User.username == username).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
-    else:
-        return user
+    return user
 
 
-
-@app.post("/hotels", status_code=status.HTTP_201_CREATED)
+@app.post("/hotels/", status_code=status.HTTP_201_CREATED)
 async def add_hotel(hotel: Hotel, db: db_dependency):
     db_hotel = models.Hotel(**hotel.model_dump())
     db.add(db_hotel)
     db.commit()
 
-
-
+@app.get("/hotels/", response_model=List[Hotel],  status_code=status.HTTP_200_OK)
+async def get_hotels(db: db_dependency):
+    hotels = db.query(models.Hotel).all()
+    if not hotels:
+        raise HTTPException(status_code=404, detail="No hotels found")
+    return hotels
 

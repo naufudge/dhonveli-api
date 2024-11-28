@@ -7,5 +7,6 @@ class UserBase(BaseModel):
     loyalty_points: int
     role: str
 
+
 class Hotel(BaseModel):
     name: str
