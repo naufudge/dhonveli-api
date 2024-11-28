@@ -14,7 +14,7 @@ class User(Base):
     username = Column(String(50), unique=True)
     password = Column(String(100))
     email = Column(String(100), unique=True)
-    loyalty_points = Column(Integer, server_default=0)
+    loyalty_points = Column(Integer)
     role = Column(String(50), server_default="normal")
 
 class Hotel(Base):
