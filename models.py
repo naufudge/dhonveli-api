@@ -24,6 +24,8 @@ class Hotel(Base):
     name = Column(String(50))
     room_count = Column(Integer)
 
+    reviews = relationship("Review", back_populates="hotel")
+
 class HotelBooking(Base):
     __tablename__ = "hotel_booking"
 
@@ -72,7 +74,7 @@ class RoomType(Base):
     quantity = Column(Integer)
 
     hotel_id = Column(Integer, ForeignKey("hotel.id", ondelete="CASCADE"), nullable=False)
-    hotel = relationship("Hotel", back_populates="hotel")
+    hotel = relationship("Hotel")
 
 class Review(Base):
     __tablename__ = "review"
