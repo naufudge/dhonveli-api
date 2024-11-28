@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException, Depends, status
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from schemas import *
 from typing import Annotated
 from sqlalchemy.orm import Session
 from database import engine, SessionLocal
@@ -21,13 +21,6 @@ app.add_middleware(
 
 pymysql.install_as_MySQLdb()
 models.Base.metadata.create_all(bind=engine)
-
-class UserBase(BaseModel):
-    username: str
-    password: str
-    email: str
-    loyalty_points: int
-    role: str
 
 def get_db():
     db = SessionLocal()
@@ -51,6 +44,14 @@ async def read_user(username: str, db: db_dependency):
         raise HTTPException(status_code=404, detail="User not found")
     else:
         return user
+
+
+
+@app.post("/hotels", status_code=status.HTTP_201_CREATED)
+async def add_hotel(hotel: Hotel, db: db_dependency):
+    db_hotel = models.Hotel(**hotel.model_dump())
+    db.add(db_hotel)
+    db.commit()
 
 
 
