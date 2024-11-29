@@ -24,8 +24,6 @@ class Hotel(Base):
     name = Column(String(50))
     room_count = Column(Integer)
 
-    reviews = relationship("Review", back_populates="hotel")
-
 class HotelBooking(Base):
     __tablename__ = "hotel_booking"
 
