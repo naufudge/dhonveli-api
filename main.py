@@ -57,18 +57,18 @@ async def add_hotel(hotel: CreateHotel, db: db_dependency):
     db.add(db_hotel)
     db.commit()
 
-    room_types = [
-        models.RoomType(
-            name=room["name"],
-            price=room["price"],
-            bed_count=room["bed_count"],
-            quantity=room["quantity"],
-            hotel_id=db_hotel.id
-        ) for room in hotel.rooms
-    ]
+    # room_types = [
+    #     models.RoomType(
+    #         name=room["name"],
+    #         price=room["price"],
+    #         bed_count=room["bed_count"],
+    #         quantity=room["quantity"],
+    #         hotel_id=db_hotel.id
+    #     ) for room in hotel.rooms
+    # ]
 
-    db.add_all(room_types)
-    db.commit()
+    # db.add_all(room_types)
+    # db.commit()
 
 
 @app.get("/hotels/", response_model=List[ViewHotel],  status_code=status.HTTP_200_OK)
