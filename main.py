@@ -78,3 +78,10 @@ async def get_hotels(db: db_dependency):
         raise HTTPException(status_code=404, detail="No hotels found")
     return hotels
 
+
+@app.get("/room_types/", response_model=List[HotelRoomTypes], status_code=status.HTTP_200_OK)
+async def get_room_types(db: db_dependency):
+    room_types = db.query(models.RoomType).all()
+    if not room_types:
+        raise HTTPException(status_code=404, detail="No hotel room types found")
+    return room_types

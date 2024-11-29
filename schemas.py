@@ -17,4 +17,13 @@ class CreateHotel(BaseModel):
 class ViewHotel(BaseModel):
     name: str
     room_count: int
+
+
+class HotelRoomTypes(BaseModel):
+    name: str
+    price: float
+    bed_count: int
+    quantity: int
+    hotel_id: int
+    hotel: ViewHotel
     
