@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from database import engine, SessionLocal
 import models
 import pymysql
+from copy import copy
 
 app = FastAPI(title="Dhonveli API")
 
@@ -47,12 +48,8 @@ async def read_user(username: str, db: db_dependency):
 
 
 @app.post("/hotels/", status_code=status.HTTP_201_CREATED)
-async def add_hotel(hotel: CreateHotel, db: db_dependency):
-    room_count = 0
-    for room in hotel.rooms:
-        room_count += room["quantity"]
-        
-    db_hotel = models.Hotel(name=hotel.name, room_count=room_count)
+async def add_hotel(hotel: CreateHotel, db: db_dependency):  
+    db_hotel = models.Hotel(name=hotel.name, room_count=0)
     
     db.add(db_hotel)
     db.commit()
@@ -86,6 +83,13 @@ async def update_hotel(hotel_id: int, hotel_update: CreateHotel, db: db_dependen
     if not hotel:
         raise HTTPException(status_code=404, detail="Hotel not found")
     
+    if hotel_update.rooms is not None:
+        room_count = copy(hotel.room_count)
+        for room in hotel_update.rooms:
+            room_count += room["quantity"]
+        
+        hotel.room_count = room_count
+
     room_types = [
         models.RoomType(
             name=room["name"],
@@ -98,6 +102,7 @@ async def update_hotel(hotel_id: int, hotel_update: CreateHotel, db: db_dependen
 
     db.add_all(room_types)
     db.commit()
+    db.refresh(hotel)
 
 
 
