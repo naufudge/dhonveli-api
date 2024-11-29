@@ -11,14 +11,15 @@ class UserBase(BaseModel):
 
 
 class CreateHotel(BaseModel):
-    name: str
-    rooms: List[Dict[str, str | int | float]]
+    name: str | None = None
+    rooms: List[Dict[str, str | int | float]] | None = None
 
 class ViewHotel(BaseModel):
+    id: int
     name: str
     room_count: int
-
-
+    
+    
 class HotelRoomTypes(BaseModel):
     name: str
     price: float
@@ -26,4 +27,3 @@ class HotelRoomTypes(BaseModel):
     quantity: int
     hotel_id: int
     hotel: ViewHotel
-    
