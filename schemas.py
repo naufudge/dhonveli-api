@@ -20,7 +20,11 @@ class ViewHotel(BaseModel):
     room_count: int
     
 
-class HotelRoomTypes(BaseModel):
+class CreateHotelRoomType(BaseModel):
+    hotel_id: int | None = None
+    rooms: List[Dict[str, str | int | float]] | None = None
+
+class HotelRoomType(BaseModel):
     id: int
     name: str
     price: float

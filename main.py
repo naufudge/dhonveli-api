@@ -6,7 +6,6 @@ from sqlalchemy.orm import Session
 from database import engine, SessionLocal
 import models
 import pymysql
-from copy import copy
 
 app = FastAPI(title="Dhonveli API")
 
@@ -75,20 +74,20 @@ async def get_hotels(db: db_dependency):
         raise HTTPException(status_code=404, detail="No hotels found")
     return hotels
 
-@app.patch("/hotels/{hotel_id}", status_code=status.HTTP_200_OK)
-async def update_hotel(hotel_id: int, hotel_update: CreateHotel, db: db_dependency):
-    """Create new room types for an individual hotel."""
-    hotel = db.query(models.Hotel).filter(models.Hotel.id == hotel_id).first()
+@app.post("/room_types/", status_code=status.HTTP_201_CREATED)
+async def update_hotel(room_type: CreateHotelRoomType, db: db_dependency):
+    """Create new room types for a hotel."""
+    # hotel = db.query(models.Hotel).filter(models.Hotel.id == hotel_id).first()
 
-    if not hotel:
-        raise HTTPException(status_code=404, detail="Hotel not found")
+    # if not hotel:
+    #     raise HTTPException(status_code=404, detail="Hotel not found")
     
-    if hotel_update.rooms is not None:
-        room_count = copy(hotel.room_count)
-        for room in hotel_update.rooms:
-            room_count += room["quantity"]
+    # if hotel_update.rooms is not None:
+    #     room_count = copy(hotel.room_count)
+    #     for room in hotel_update.rooms:
+    #         room_count += room["quantity"]
         
-        hotel.room_count = room_count
+    #     hotel.room_count = room_count
 
     room_types = [
         models.RoomType(
@@ -96,19 +95,44 @@ async def update_hotel(hotel_id: int, hotel_update: CreateHotel, db: db_dependen
             price=room["price"],
             bed_count=room["bed_count"],
             quantity=room["quantity"],
-            hotel_id=hotel.id
-        ) for room in hotel_update.rooms
+            hotel_id=room_type.hotel_id
+        ) for room in room_type.rooms
     ]
 
     db.add_all(room_types)
     db.commit()
-    db.refresh(hotel)
 
+@app.patch("/room_types/{room_type_id}")
+async def update_room_type(room_type_id: int, room_type_update: HotelRoomType, db: db_dependency):
+    """Update the room type name and price."""
+    room_type = db.query(models.RoomType).filter(models.RoomType.id == room_type_id).first()
 
+    if not room_type:
+        raise HTTPException(status_code=404, detail="Room type not found")
+    
+    if room_type_update.name is not None:
+        room_type.name = room_type_update.name
+    if room_type_update.bed_count is not None:
+        room_type.bed_count = room_type_update.bed_count
+    if room_type_update.price is not None:
+        room_type.price = room_type_update.price
+    
+    db.commit()
+    db.refresh(room_type)
 
-@app.get("/room_types/", response_model=List[HotelRoomTypes], status_code=status.HTTP_200_OK)
+@app.delete("/room_types/{room_type_id}")
+async def delete_room_type(room_type_id: int, db: db_dependency):
+    """Delete an exisitng room type."""
+    deleted_count = db.query(models.RoomType).filter(models.RoomType.id == room_type_id).delete()
+
+    if deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Inputted room type ID not found")
+    else:
+        db.commit()
+
+@app.get("/room_types/", response_model=List[HotelRoomType], status_code=status.HTTP_200_OK)
 async def get_room_types(db: db_dependency):
     room_types = db.query(models.RoomType).all()
     if not room_types:
-        raise HTTPException(status_code=404, detail="No hotel room types found")
+        raise HTTPException(status_code=404, detail="No room types found")
     return room_types
