@@ -19,8 +19,9 @@ class ViewHotel(BaseModel):
     name: str
     room_count: int
     
-    
+
 class HotelRoomTypes(BaseModel):
+    id: int
     name: str
     price: float
     bed_count: int
