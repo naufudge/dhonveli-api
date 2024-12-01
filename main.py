@@ -141,8 +141,13 @@ async def get_room_types(db: db_dependency):
 @app.post("/rooms/", status_code=status.HTTP_201_CREATED)
 async def create_room(room: CreateHotelRoom, db: db_dependency):
     """Create a new hotel room."""
-    print(room.hotel_room)
-    db_room = models.Room(**room.hotel_room.model_dump())
+    hotel_room = room.hotel_room
+    db_room = models.Room(
+        room_number = hotel_room.room_number,
+        occupied = hotel_room.occupied,
+        booking_id = None,
+        room_type_id = hotel_room.room_type_id
+    )
     db_hotel = db.query(models.Hotel).filter(models.Hotel.id == room.hotel_id).first()
 
     if not db_hotel:
@@ -151,7 +156,7 @@ async def create_room(room: CreateHotelRoom, db: db_dependency):
     db_hotel.room_count += 1
     
     db.add(db_room)
-    
+
     try:
         db.commit()
     except IntegrityError as e:
