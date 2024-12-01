@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey, Boolean
+from sqlalchemy import Table, Column, Integer, String, Float, DateTime, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.expression import text
 from sqlalchemy.sql.sqltypes import TIMESTAMP
@@ -6,6 +6,11 @@ from database import Base
 import pymysql
 
 pymysql.install_as_MySQLdb()
+
+# booking_rooms = Table('booking_rooms', Base.metadata,
+#     Column('hotel_booking_id', Integer, ForeignKey('hotel_booking.hotel_booking_id')),
+#     Column('room_id', Integer, ForeignKey('room.room_id'))
+# )
 
 class User(Base):
     __tablename__ = "user"
@@ -34,10 +39,10 @@ class HotelBooking(Base):
     total_price = Column(Float)
 
     user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"), nullable=False)
-    user = relationship("User")
+    user = relationship("User", foreign_keys=[user_id])
 
     room_id = Column(Integer, ForeignKey("room.id", ondelete="CASCADE"), nullable=False)   
-    room = relationship("Room")
+    room = relationship("Room", foreign_keys=[room_id])
 
     # hotel_id = Column(Integer, ForeignKey("hotel.id", ondelete="CASCADE"), nullable=False)
     # hotel = relationship("Hotel")
