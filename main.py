@@ -140,6 +140,7 @@ async def get_room_types(db: db_dependency):
 @app.post("/rooms/", status_code=status.HTTP_201_CREATED)
 async def create_room(room: CreateHotelRoom, db: db_dependency):
     """Create a new hotel room."""
+    print(room.hotel_room)
     db_room = models.Room(**room.hotel_room.model_dump())
     db_hotel = db.query(models.Hotel).filter(models.Hotel.id == room.hotel_id).first()
 
