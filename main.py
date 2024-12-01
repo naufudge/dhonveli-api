@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from schemas import *
 from typing import Annotated, List
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import IntegrityError
 from database import engine, SessionLocal
 import models
 import pymysql
@@ -150,7 +151,13 @@ async def create_room(room: CreateHotelRoom, db: db_dependency):
     db_hotel.room_count += 1
     
     db.add(db_room)
-    db.commit()
+    
+    try:
+        db.commit()
+    except IntegrityError as e:
+        db.rollback()
+        print(f"Integrity Error: {e}")
+
     db.refresh(db_hotel)
 
 @app.get("/rooms/", response_model=List[HotelRoom], status_code=status.HTTP_200_OK)
