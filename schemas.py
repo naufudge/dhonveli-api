@@ -32,3 +32,8 @@ class HotelRoomType(BaseModel):
     quantity: int
     hotel_id: int
     hotel: ViewHotel
+
+class HotelRoom(BaseModel):
+    id: int | None = None
+    room_number: int | None = None
+    room_type_id: int

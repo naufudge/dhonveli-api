@@ -136,3 +136,20 @@ async def get_room_types(db: db_dependency):
     if not room_types:
         raise HTTPException(status_code=404, detail="No room types found")
     return room_types
+
+@app.post("/rooms/", status_code=status.HTTP_201_CREATED)
+async def create_room(room: HotelRoom, db: db_dependency):
+    """Create a new hotel room."""
+    db_room = models.Room(**room.model_dump())
+    
+    db.add(db_room)
+    db.commit()
+
+@app.get("/rooms/", response_model=List[HotelRoom], status_code=status.HTTP_200_OK)
+async def get_rooms(db: db_dependency):
+    """Get all hotel rooms"""
+    rooms = db.query(models.Room).all()
+    if not rooms:
+        raise HTTPException(status_code=404, detail="No rooms found")
+    
+    return rooms
