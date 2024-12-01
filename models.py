@@ -65,10 +65,10 @@ class Room(Base):
     occupied = Column(Boolean)
 
     booking_id = Column(Integer, ForeignKey("hotel_booking.id", ondelete="CASCADE"), nullable=True)
-    booking = relationship("HotelBooking")
+    booking = relationship("HotelBooking", foreign_keys=[booking_id])
 
     room_type_id = Column(Integer, ForeignKey("room_type.id", ondelete="CASCADE"), nullable=False)
-    room_type = relationship("RoomType")
+    room_type = relationship("RoomType", foreign_keys=[room_type_id])
     
 
 class RoomType(Base):
@@ -92,10 +92,10 @@ class Review(Base):
     date_time = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text("now()"))
     
     user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"), nullable=False)
-    user = relationship("User")
+    user = relationship("User", foreign_keys=[user_id])
 
     hotel_id = Column(Integer, ForeignKey("hotel.id", ondelete="CASCADE"), nullable=False)
-    hotel = relationship("Hotel")
+    hotel = relationship("Hotel", foreign_keys=[hotel_id])
 
 class Activity(Base):
     __tablename__ = "activity"
@@ -113,7 +113,7 @@ class ActivityTicket(Base):
     total_price = Column(Float)
     
     activity_id = Column(Integer, ForeignKey("activity.id", ondelete="CASCADE"), nullable=False)  
-    activity = relationship("Activity")
+    activity = relationship("Activity", foreign_keys=[activity_id])
 
     user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"), nullable=True)  
-    user = relationship("User")
+    user = relationship("User", foreign_keys=[user_id])
