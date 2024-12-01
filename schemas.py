@@ -40,7 +40,7 @@ class HotelRoom(BaseModel):
     booking_id: int | None = None
     booking: Any | None = None
     room_type_id: int | None = None
-    room_type: HotelRoomType | None = None
+    room_type: HotelRoomType
 
 class CreateHotelRoom(BaseModel):
     hotel_room: HotelRoom
