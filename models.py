@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.expression import text
 from sqlalchemy.sql.sqltypes import TIMESTAMP
@@ -39,8 +39,8 @@ class HotelBooking(Base):
     room_id = Column(Integer, ForeignKey("room.id", ondelete="CASCADE"), nullable=False)   
     room = relationship("Room")
 
-    hotel_id = Column(Integer, ForeignKey("hotel.id", ondelete="CASCADE"), nullable=False)
-    hotel = relationship("Hotel")
+    # hotel_id = Column(Integer, ForeignKey("hotel.id", ondelete="CASCADE"), nullable=False)
+    # hotel = relationship("Hotel")
 
 
 class Guest(Base):
@@ -57,6 +57,10 @@ class Room(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     room_number = Column(String(20))
+    occupied = Column(Boolean)
+
+    booking_id = Column(Integer, ForeignKey("hotel_booking.id", ondelete="CASCADE"), nullable=True)
+    booking = relationship("HotelBooking")
 
     room_type_id = Column(Integer, ForeignKey("room_type.id", ondelete="CASCADE"), nullable=False)
     room_type = relationship("RoomType")

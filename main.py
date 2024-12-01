@@ -153,3 +153,22 @@ async def get_rooms(db: db_dependency):
         raise HTTPException(status_code=404, detail="No rooms found")
     
     return rooms
+
+@app.patch("/rooms/{room_id}", status_code=status.HTTP_200_OK)
+async def update_room(room_id: int, room: HotelRoom, db:db_dependency):
+    """Update an existing hotel room"""
+    db_room = db.query(models.Room).filter(models.Room.id == room_id).first()
+
+    if not db_room:
+        raise HTTPException(status_code=404, detail="Room not found")
+
+    if room.room_number:
+        db_room.room_number = room.room_number
+    if room.occupied:
+        db_room.occupied = room.occupied
+    if room.room_type_id:
+        db_room.room_type_id = room.room_type_id
+    
+    db.commit()
+    db.refresh(db_room)
+

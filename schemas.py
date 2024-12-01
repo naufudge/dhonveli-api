@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import List, Dict
+from typing import List, Dict, Any
 
 
 class UserBase(BaseModel):
@@ -36,4 +36,7 @@ class HotelRoomType(BaseModel):
 class HotelRoom(BaseModel):
     id: int | None = None
     room_number: int | None = None
-    room_type_id: int
+    occupied: bool | None = None
+    booking_id: int | None = None
+    booking: Any | None = None
+    room_type_id: int | None = None
