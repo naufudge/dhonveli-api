@@ -192,3 +192,12 @@ async def update_room(room_id: int, room: HotelRoom, db:db_dependency):
     db.commit()
     db.refresh(db_room)
 
+@app.delete("/rooms/{room_id}", status_code=status.HTTP_200_OK)
+async def delete_room(room_id: int, db: db_dependency):
+    """Delete an existing room."""
+    deleted_count = db.query(models.Room).filter(models.Room.id == room_id).delete()
+    
+    if deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Inputted room ID not found")
+    else:
+        db.commit()
