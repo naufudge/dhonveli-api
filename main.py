@@ -184,8 +184,8 @@ async def update_room(room_id: int, room: UpdateHotelRoom, db:db_dependency):
 
     if room.room_number:
         db_room.room_number = room.room_number
-    if room.occupied:
-        db_room.occupied = room.occupied
+    # if room.occupied:
+    #     db_room.occupied = room.occupied
     if room.room_type_id:
         db_room.room_type_id = room.room_type_id
     
