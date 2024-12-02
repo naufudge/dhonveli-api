@@ -104,8 +104,8 @@ async def update_hotel(room_type: CreateHotelRoomType, db: db_dependency):
     db.commit()
 
 @app.patch("/room_types/{room_type_id}")
-async def update_room_type(room_type_id: int, room_type_update: HotelRoomType, db: db_dependency):
-    """Update the room type name and price."""
+async def update_room_type(room_type_id: int, room_type_update: UpdateHotelRoomType, db: db_dependency):
+    """Update the room type name, price and bed count."""
     room_type = db.query(models.RoomType).filter(models.RoomType.id == room_type_id).first()
 
     if not room_type:

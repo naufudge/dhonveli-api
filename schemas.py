@@ -24,6 +24,11 @@ class CreateHotelRoomType(BaseModel):
     hotel_id: int | None = None
     rooms: List[Dict[str, str | int | float]] | None = None
 
+class UpdateHotelRoomType(BaseModel):
+    name: str
+    price: float
+    bed_count: int
+
 class HotelRoomType(BaseModel):
     id: int
     name: str
