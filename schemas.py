@@ -50,3 +50,8 @@ class HotelRoom(BaseModel):
 class CreateHotelRoom(BaseModel):
     hotel_room: HotelRoom
     hotel_id: int | None = None
+
+class UpdateHotelRoom(BaseModel):
+    room_number: int | None = None
+    occupied: bool | None = None
+    room_type_id: int | None = None
