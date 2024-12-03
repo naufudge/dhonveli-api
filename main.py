@@ -39,6 +39,14 @@ async def create_user(user: UserBase, db: db_dependency):
     db.add(db_user)
     db.commit()
 
+@app.get("/users/", status_code=status.HTTP_200_OK)
+async def get_users(db: db_dependency):
+    """Get all the registered users."""
+    user = db.query(models.User).all()
+    if not user:
+        raise HTTPException(status_code=404, detail="No users found")
+    return user
+
 @app.get("/users/{username}", status_code=status.HTTP_200_OK)
 async def read_user(username: str, db: db_dependency):
     user = db.query(models.User).filter(models.User.username == username).first()
