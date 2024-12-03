@@ -9,6 +9,12 @@ class UserBase(BaseModel):
     loyalty_points: int
     role: str
 
+class User(BaseModel):
+    id: int
+    username: str
+    email: str
+    loyalty_points: int
+    role: str
 
 class CreateHotel(BaseModel):
     name: str | None = None

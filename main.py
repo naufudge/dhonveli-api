@@ -39,7 +39,7 @@ async def create_user(user: UserBase, db: db_dependency):
     db.add(db_user)
     db.commit()
 
-@app.get("/users/", status_code=status.HTTP_200_OK)
+@app.get("/users/", response_model=List[User], status_code=status.HTTP_200_OK)
 async def get_users(db: db_dependency):
     """Get all the registered users."""
     user = db.query(models.User).all()
