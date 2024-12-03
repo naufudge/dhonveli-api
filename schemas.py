@@ -16,6 +16,10 @@ class User(BaseModel):
     loyalty_points: int
     role: str
 
+class UserUpdate(BaseModel):
+    loyalty_points: int | None = None
+    role: str | None = None
+
 class CreateHotel(BaseModel):
     name: str | None = None
     rooms: List[Dict[str, str | int | float]] | None = None

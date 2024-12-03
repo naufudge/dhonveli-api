@@ -54,6 +54,21 @@ async def read_user(username: str, db: db_dependency):
         raise HTTPException(status_code=404, detail="User not found")
     return user
 
+@app.patch("/users/{username}", status_code=status.HTTP_200_OK)
+async def update_user(username: str, user: UserUpdate, db: db_dependency):
+    db_user = db.query(models.User).filter(models.User.username == username).first()
+    
+    if not db_user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    if user.role:
+        db_user.role = user.role
+    if user.loyalty_points:
+        db_user.loyalty_points = user.loyalty_points
+
+    db.commit()
+    db.refresh(db_user)
+
 
 @app.post("/hotels/", status_code=status.HTTP_201_CREATED)
 async def add_hotel(hotel: CreateHotel, db: db_dependency):  
