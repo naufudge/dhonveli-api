@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from typing import List, Dict, Any
+from datetime import datetime
 
 
 class UserBase(BaseModel):
@@ -65,3 +66,22 @@ class UpdateHotelRoom(BaseModel):
     room_number: int | None = None
     occupied: bool | None = None
     room_type_id: int | None = None
+
+class HotelBooking(BaseModel):
+    id: int
+    check_in_date: datetime
+    check_out_date: datetime
+    booking_date: datetime
+    total_price: float
+    user_id: int
+    user: User
+    room_id: int
+    room: HotelRoom
+
+class CreateHotelBooking(BaseModel):
+    check_in_date: datetime | None = None
+    check_out_date: datetime | None = None
+    booking_date: datetime | None = None
+    total_price: float | None = None
+    user_id: int | None = None
+    room_id: int | None = None

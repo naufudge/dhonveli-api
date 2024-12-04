@@ -220,7 +220,35 @@ async def delete_room(room_id: int, db: db_dependency):
     """Delete an existing room."""
     deleted_count = db.query(models.Room).filter(models.Room.id == room_id).delete()
     
+    # TODO: reduce the room count from the hotel
+
     if deleted_count == 0:
         raise HTTPException(status_code=404, detail="Inputted room ID not found")
     else:
         db.commit()
+    
+
+@app.post("/bookings", status_code=status.HTTP_201_CREATED)
+async def create_booking(booking: CreateHotelBooking, db: db_dependency):
+    """Create a hotel booking"""
+    db_booking = models.HotelBooking(**booking.model_dump())
+
+    db.add(db_booking)
+
+    try:
+        db.commit()
+    except IntegrityError as e:
+        db.rollback()
+        print(f"Integrity Error: {e}")
+    
+    db.refresh(db_booking)
+
+@app.get("/bookings", response_model=List[HotelBooking], status_code=status.HTTP_201_CREATED)
+async def create_booking(db: db_dependency):
+    """Get all hotel bookings"""
+    bookings = db.query(models.HotelBooking).all()
+
+    if not bookings:
+        raise HTTPException(status_code=404, detail="No bookings found")
+
+    return bookings
