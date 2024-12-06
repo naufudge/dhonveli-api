@@ -53,8 +53,7 @@ class HotelRoom(BaseModel):
     id: int | None = None
     room_number: int | None = None
     occupied: bool | None = None
-    booking_id: int | None = None
-    booking: Any | None = None
+    bookings: List | None = None
     room_type_id: int
     room_type: HotelRoomType | None = None
 
@@ -72,16 +71,18 @@ class HotelBooking(BaseModel):
     check_in_date: datetime
     check_out_date: datetime
     booking_date: datetime
+    numOfGuests: int
     total_price: float
     user_id: int
     user: User
     room_id: int
-    room: HotelRoom
+    room: List[HotelRoom]
 
 class CreateHotelBooking(BaseModel):
     check_in_date: datetime | None = None
     check_out_date: datetime | None = None
     booking_date: datetime | None = None
+    numOfGuests: int | None = None
     total_price: float | None = None
     user_id: int | None = None
-    room_id: int | None = None
+    room_ids: List[int] | None = None

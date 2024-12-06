@@ -7,10 +7,12 @@ import pymysql
 
 pymysql.install_as_MySQLdb()
 
-# booking_rooms = Table('booking_rooms', Base.metadata,
-#     Column('hotel_booking_id', Integer, ForeignKey('hotel_booking.hotel_booking_id')),
-#     Column('room_id', Integer, ForeignKey('room.room_id'))
-# )
+# Association table between HotelBooking and Room
+hotel_booking_rooms = Table(
+    'hotel_booking_rooms', Base.metadata,
+    Column('hotel_booking_id', Integer, ForeignKey('hotel_booking.id', ondelete="CASCADE"), primary_key=True),
+    Column('room_id', Integer, ForeignKey('room.id', ondelete="CASCADE"), primary_key=True)
+)
 
 class User(Base):
     __tablename__ = "user"
@@ -37,15 +39,16 @@ class HotelBooking(Base):
     check_out_date = Column(DateTime)
     booking_date = Column(DateTime)
     total_price = Column(Float)
+    numOfGuests = Column(Integer)
 
     user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"), nullable=False)
     user = relationship("User", foreign_keys=[user_id])
 
-    room_id = Column(Integer, ForeignKey("room.id", ondelete="CASCADE"), nullable=False)   
-    room = relationship("Room", foreign_keys=[room_id])
+    # room_id = Column(Integer, ForeignKey("room.id", ondelete="CASCADE"), nullable=False)   
+    # room = relationship("Room", foreign_keys=[room_id])
 
-    # hotel_id = Column(Integer, ForeignKey("hotel.id", ondelete="CASCADE"), nullable=False)
-    # hotel = relationship("Hotel")
+    rooms = relationship("Room", secondary=hotel_booking_rooms, back_populates="bookings")
+
 
 
 class Guest(Base):
@@ -64,8 +67,9 @@ class Room(Base):
     room_number = Column(String(20))
     occupied = Column(Boolean)
 
-    booking_id = Column(Integer, ForeignKey("hotel_booking.id", ondelete="CASCADE"), nullable=True)
-    booking = relationship("HotelBooking", foreign_keys=[booking_id])
+    # booking_id = Column(Integer, ForeignKey("hotel_booking.id", ondelete="CASCADE"), nullable=True)
+    # booking = relationship("HotelBooking", foreign_keys=[booking_id])
+    bookings = relationship("HotelBooking", secondary=hotel_booking_rooms, back_populates="rooms")
 
     room_type_id = Column(Integer, ForeignKey("room_type.id", ondelete="CASCADE"), nullable=False)
     room_type = relationship("RoomType", foreign_keys=[room_type_id])
