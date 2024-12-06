@@ -218,15 +218,21 @@ async def update_room(room_id: int, room: UpdateHotelRoom, db:db_dependency):
 @app.delete("/rooms/{room_id}", status_code=status.HTTP_200_OK)
 async def delete_room(room_id: int, db: db_dependency):
     """Delete an existing room."""
-    deleted_count = db.query(models.Room).filter(models.Room.id == room_id).delete()
+    db_room = db.query(models.Room).filter(models.Room.id == room_id)
+    room = db_room.first()
+    if not room:
+        raise HTTPException(status_code=404, detail="Room not found")
+    
+    db_room_type = db.query(models.RoomType).filter(models.RoomType.id == room.room_type_id).first()
+    db_hotel = db.query(models.Hotel).filter(models.Hotel.id == db_room_type.hotel_id).first()
+
+    db_room.delete()
     
     # TODO: reduce the room count from the hotel
+    db_hotel.room_count -= 1
 
-    if deleted_count == 0:
-        raise HTTPException(status_code=404, detail="Inputted room ID not found")
-    else:
-        db.commit()
-    
+    db.commit()
+    db.refresh(db_hotel)
 
 @app.post("/bookings", status_code=status.HTTP_201_CREATED)
 async def create_booking(booking: CreateHotelBooking, db: db_dependency):
