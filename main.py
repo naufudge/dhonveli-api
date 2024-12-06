@@ -168,7 +168,6 @@ async def create_room(room: CreateHotelRoom, db: db_dependency):
     db_room = models.Room(
         room_number = hotel_room.room_number,
         occupied = hotel_room.occupied,
-        booking_id = None,
         room_type_id = hotel_room.room_type_id
     )
     db_hotel = db.query(models.Hotel).filter(models.Hotel.id == room.hotel_id).first()
