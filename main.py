@@ -273,8 +273,8 @@ async def create_booking(booking: CreateHotelBooking, db: db_dependency):
 async def view_bookings(db: db_dependency):
     """Get all hotel bookings"""
     bookings = db.query(models.HotelBooking).join(models.HotelBooking.rooms).all()
-
+    print(bookings)
     if not bookings:
         raise HTTPException(status_code=404, detail="No bookings found")
 
-    return bookings
+    return {"test": "works"}
