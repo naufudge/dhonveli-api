@@ -256,7 +256,7 @@ async def create_booking(booking: CreateHotelBooking, db: db_dependency):
     db.refresh(db_room)
 
 @app.get("/bookings", response_model=List[HotelBooking], status_code=status.HTTP_201_CREATED)
-async def create_booking(db: db_dependency):
+async def view_bookings(db: db_dependency):
     """Get all hotel bookings"""
     bookings = db.query(models.HotelBooking).all()
 
