@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from typing import List, Dict, Any
 from datetime import datetime
 
@@ -67,6 +67,8 @@ class UpdateHotelRoom(BaseModel):
     room_type_id: int | None = None
 
 class HotelBookingBase(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     check_in_date: datetime
     check_out_date: datetime
@@ -76,9 +78,6 @@ class HotelBookingBase(BaseModel):
     user_id: int
     user: User
     rooms: List[HotelRoom]
-
-    class Config:
-        from_attributes = True
         
 
 class CreateHotelBooking(BaseModel):
