@@ -71,11 +71,10 @@ class HotelBooking(BaseModel):
     check_in_date: datetime
     check_out_date: datetime
     booking_date: datetime
-    numOfGuests: int
     total_price: float
+    numOfGuests: int
     user_id: int
     user: User
-    room_id: int
     room: List[HotelRoom]
 
 class CreateHotelBooking(BaseModel):
