@@ -5,6 +5,7 @@ from typing import Annotated, List
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 from database import engine, SessionLocal
+from datetime import datetime
 import models
 import pymysql
 
@@ -245,10 +246,11 @@ async def create_booking(booking: CreateHotelBooking, db: db_dependency):
         rooms.append(room)
         room.occupied = True
 
+# datetime.fromisoformat(iso_string.replace("Z", "+00:00"))
     db_booking = models.HotelBooking(
-        check_in_date = booking.check_in_date,
-        check_out_date = booking.check_out_date,
-        booking_date = booking.booking_date,
+        check_in_date = datetime.fromisoformat(booking.check_in_date.replace("Z", "+00:00")),
+        check_out_date = datetime.fromisoformat(booking.check_out_date.replace("Z", "+00:00")),
+        booking_date = datetime.fromisoformat(booking.booking_date.replace("Z", "+00:00")),
         total_price = booking.total_price,
         numOfGuests = booking.numOfGuests,
         user_id = booking.user_id,
