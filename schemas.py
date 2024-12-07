@@ -66,7 +66,7 @@ class UpdateHotelRoom(BaseModel):
     occupied: bool | None = None
     room_type_id: int | None = None
 
-class HotelBooking(BaseModel):
+class HotelBookingBase(BaseModel):
     id: int
     check_in_date: datetime
     check_out_date: datetime
