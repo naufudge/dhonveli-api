@@ -76,6 +76,9 @@ class HotelBooking(BaseModel):
     user_id: int
     user: User
     rooms: List[HotelRoom]
+    
+    class Config:
+        orm_mode = True
 
 class CreateHotelBooking(BaseModel):
     check_in_date: datetime | Any | None = None
