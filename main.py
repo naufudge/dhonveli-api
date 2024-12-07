@@ -236,14 +236,24 @@ async def delete_room(room_id: int, db: db_dependency):
 @app.post("/bookings/", status_code=status.HTTP_201_CREATED)
 async def create_booking(booking: CreateHotelBooking, db: db_dependency):
     """Create a hotel booking a change the room status to occupied."""
-    print(booking.model_dump())
-    db_booking = models.HotelBooking(**booking.model_dump())
-    db_room = db.query(models.Room).filter(models.Room.id == booking.room_id).first()
-    
-    if not db_room:
-        raise HTTPException(status_code=404, detail="Room not found")
-    else:
-        db_room.occupied = True
+    rooms: List[models.Room] = []
+    for room_id in booking.room_ids:
+        room = db.query(models.Room).filter(models.Room.id == room_id).first()
+        if not room:
+            raise HTTPException(status_code=404, detail=f"Room {room_id} not found")
+        
+        rooms.append(room)
+        room.occupied = True
+
+    db_booking = models.HotelBooking(
+        check_in_date = booking.check_in_date,
+        check_out_date = booking.check_out_date,
+        booking_date = booking.booking_date,
+        total_price = booking.total_price,
+        numOfGuests = booking.numOfGuests,
+        user_id = booking.user_id,
+        rooms = rooms
+    )
 
     db.add(db_booking)
 
@@ -253,8 +263,9 @@ async def create_booking(booking: CreateHotelBooking, db: db_dependency):
         db.rollback()
         print(f"Integrity Error: {e}")
     
-    db.refresh(db_booking)
-    db.refresh(db_room)
+    for room in rooms:
+        db.refresh(room)
+
 
 @app.get("/bookings/", response_model=List[HotelBooking], status_code=status.HTTP_200_OK)
 async def view_bookings(db: db_dependency):
