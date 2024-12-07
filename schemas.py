@@ -79,9 +79,9 @@ class HotelBooking(BaseModel):
     room: List[HotelRoom]
 
 class CreateHotelBooking(BaseModel):
-    check_in_date: datetime | None = None
-    check_out_date: datetime | None = None
-    booking_date: datetime | None = None
+    check_in_date: datetime | Any | None = None
+    check_out_date: datetime | Any | None = None
+    booking_date: datetime | Any | None = None
     numOfGuests: int | None = None
     total_price: float | None = None
     user_id: int | None = None
