@@ -277,4 +277,4 @@ async def view_bookings(db: db_dependency):
     if not bookings:
         raise HTTPException(status_code=404, detail="No bookings found")
 
-    return bookings
+    return [booking.__dict__ for booking in bookings]
