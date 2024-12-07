@@ -75,7 +75,7 @@ class HotelBooking(BaseModel):
     numOfGuests: int
     user_id: int
     user: User
-    room: List[HotelRoom]
+    rooms: List[HotelRoom]
 
 class CreateHotelBooking(BaseModel):
     check_in_date: datetime | Any | None = None
