@@ -59,6 +59,9 @@ class HotelRoom(BaseModel):
     room_type_id: int
     room_type: HotelRoomType | None = None
 
+    class Config:
+        orm_mode = True
+
 class CreateHotelRoom(BaseModel):
     hotel_room: HotelRoom
     hotel_id: int | None = None
@@ -80,6 +83,9 @@ class HotelBookingBase(BaseModel):
     user_id: int
     user: User
     # rooms: List[HotelRoom]
+
+    class Config:
+        orm_mode = True
         
 
 class CreateHotelBooking(BaseModel):
