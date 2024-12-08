@@ -1,4 +1,4 @@
-from sqlalchemy import Table, Column, Integer, String, Float, DateTime, ForeignKey, Boolean
+from sqlalchemy import Table, Column, Integer, String, Float, DateTime, ForeignKey, Boolean, BigInteger
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.expression import text
 from sqlalchemy.sql.sqltypes import TIMESTAMP
@@ -35,9 +35,9 @@ class HotelBooking(Base):
     __tablename__ = "hotel_booking"
 
     id = Column(Integer, primary_key=True, index=True)
-    check_in_date = Column(DateTime)
-    check_out_date = Column(DateTime)
-    booking_date = Column(DateTime)
+    check_in_date = Column(BigInteger)
+    check_out_date = Column(BigInteger)
+    booking_date = Column(BigInteger)
     total_price = Column(Float)
     numOfGuests = Column(Integer)
 

@@ -50,6 +50,8 @@ class HotelRoomType(BaseModel):
     hotel: ViewHotel
 
 class HotelRoom(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: int | None = None
     room_number: int | None = None
     occupied: bool | None = None
@@ -70,9 +72,9 @@ class HotelBookingBase(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
-    check_in_date: datetime
-    check_out_date: datetime
-    booking_date: datetime
+    check_in_date: int
+    check_out_date: int
+    booking_date: int
     total_price: float
     numOfGuests: int
     user_id: int
