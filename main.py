@@ -276,4 +276,14 @@ async def view_bookings(db: db_dependency):
     if not bookings:
         raise HTTPException(status_code=404, detail="No bookings found")
 
-    return bookings
+    return [{
+        "id": booking.id,
+        "check_in_date": booking.check_in_date,
+        "check_out_date": booking.check_out_date,
+        "booking_date": booking.booking_date,
+        "total_price": booking.total_price,
+        "numOfGuests": booking.numOfGuests,
+        "user_id": booking.user_id,
+        "user": booking.user,
+        "rooms": [room.id for room in booking.rooms]
+    } for booking in bookings]
