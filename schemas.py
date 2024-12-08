@@ -79,7 +79,7 @@ class HotelBookingBase(BaseModel):
     numOfGuests: int
     user_id: int
     user: User
-    # rooms: List[HotelRoom]
+    rooms: List[HotelRoom]
 
     class Config:
         orm_mode = True
