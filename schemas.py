@@ -50,8 +50,6 @@ class HotelRoomType(BaseModel):
     hotel: ViewHotel
 
 class HotelRoom(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
-
     id: int | None = None
     room_number: int | None = None
     occupied: bool | None = None
@@ -61,6 +59,7 @@ class HotelRoom(BaseModel):
 
     class Config:
         orm_mode = True
+        from_attributes=True
 
 class CreateHotelRoom(BaseModel):
     hotel_room: HotelRoom
@@ -72,8 +71,6 @@ class UpdateHotelRoom(BaseModel):
     room_type_id: int | None = None
 
 class HotelBookingBase(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
-
     id: int
     # check_in_date: datetime
     # check_out_date: datetime
@@ -86,7 +83,7 @@ class HotelBookingBase(BaseModel):
 
     class Config:
         orm_mode = True
-        
+        from_attributes=True
 
 class CreateHotelBooking(BaseModel):
     check_in_date: datetime | Any | None = None
