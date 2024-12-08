@@ -72,9 +72,9 @@ class HotelBookingBase(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
-    check_in_date: int
-    check_out_date: int
-    booking_date: int
+    # check_in_date: datetime
+    # check_out_date: datetime
+    # booking_date: datetime
     total_price: float
     numOfGuests: int
     user_id: int
