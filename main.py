@@ -285,5 +285,5 @@ async def view_bookings(db: db_dependency):
         "numOfGuests": booking.numOfGuests,
         "user_id": booking.user_id,
         "user": booking.user,
-        "rooms": [room.id for room in booking.rooms]
+        "rooms": [room for room in booking.rooms]
     } for booking in bookings]
