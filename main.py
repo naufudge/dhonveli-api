@@ -300,10 +300,7 @@ async def get_activities(db: db_dependency):
 
 @app.post("/activities/", status_code=status.HTTP_201_CREATED)
 async def add_activity(activity: Activity, db: db_dependency):  
-    db_activity = models.Activity(
-        name = activity.name,
-        price = activity.price,
-    )
+    db_activity = models.Activity(**activity.model_dump())
     
     db.add(db_activity)
     db.commit()
