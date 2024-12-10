@@ -287,3 +287,47 @@ async def view_bookings(db: db_dependency):
         "user": booking.user,
         "rooms": [room for room in booking.rooms]
     } for booking in bookings]
+
+
+@app.get("/activities/", response_model=List[Activity], status_code=status.HTTP_200_OK)
+async def get_activities(db: db_dependency):
+    """Get all the activities"""
+    activities = db.query(models.Activity).all()
+    if not activities:
+        raise HTTPException(status_code=404, detail="No activities found")
+    
+    return activities
+
+@app.post("/activities/", status_code=status.HTTP_201_CREATED)
+async def add_activity(activity: Activity, db: db_dependency):  
+    db_activity = models.Activity(
+        name = activity.name,
+        price = activity.price,
+    )
+    
+    db.add(db_activity)
+    db.commit()
+
+@app.patch("/activities/{activity_id}")
+async def update_activity(activity_id: int, activity_update: Activity, db: db_dependency):
+    """Update the price of an existing activity."""
+    activity = db.query(models.Activity).filter(models.Activity.id == activity_id).first()
+
+    if not activity:
+        raise HTTPException(status_code=404, detail="Activity not found")
+    
+    if activity_update.price is not None:
+        activity.price = activity_update.price
+    
+    db.commit()
+    db.refresh(activity)
+
+@app.delete("/activities/{activity_id}")
+async def delete_activity(activity_id: int, db: db_dependency):
+    """Delete an exisitng activity."""
+    deleted_count = db.query(models.Activity).filter(models.Activity.id == activity_id).delete()
+
+    if deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Inputted activity ID not found")
+    else:
+        db.commit()

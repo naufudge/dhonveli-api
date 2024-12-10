@@ -93,3 +93,11 @@ class CreateHotelBooking(BaseModel):
     total_price: float | None = None
     user_id: int | None = None
     room_ids: List[int] | None = None
+
+
+class Activity(BaseModel):
+    id: int | None = None
+    name: str | None = None
+    description: str | None = None
+    price: int
+
