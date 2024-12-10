@@ -101,3 +101,12 @@ class Activity(BaseModel):
     description: str | None = None
     price: int
 
+
+class ActivityTicket(BaseModel):
+    id: int
+    date_time: datetime
+    total_price: int
+    activity_id: int
+    activity: Activity | None = None
+    user_id: int
+    user: User | None = None

@@ -78,19 +78,6 @@ async def add_hotel(hotel: CreateHotel, db: db_dependency):
     db.add(db_hotel)
     db.commit()
 
-    # room_types = [
-    #     models.RoomType(
-    #         name=room["name"],
-    #         price=room["price"],
-    #         bed_count=room["bed_count"],
-    #         quantity=room["quantity"],
-    #         hotel_id=db_hotel.id
-    #     ) for room in hotel.rooms
-    # ]
-
-    # db.add_all(room_types)
-    # db.commit()
-
 
 @app.get("/hotels/", response_model=List[ViewHotel],  status_code=status.HTTP_200_OK)
 async def get_hotels(db: db_dependency):
@@ -102,18 +89,6 @@ async def get_hotels(db: db_dependency):
 @app.post("/room_types/", status_code=status.HTTP_201_CREATED)
 async def update_hotel(room_type: CreateHotelRoomType, db: db_dependency):
     """Create new room types for a hotel."""
-    # hotel = db.query(models.Hotel).filter(models.Hotel.id == hotel_id).first()
-
-    # if not hotel:
-    #     raise HTTPException(status_code=404, detail="Hotel not found")
-    
-    # if hotel_update.rooms is not None:
-    #     room_count = copy(hotel.room_count)
-    #     for room in hotel_update.rooms:
-    #         room_count += room["quantity"]
-        
-    #     hotel.room_count = room_count
-
     room_types = [
         models.RoomType(
             name=room["name"],
@@ -328,3 +303,26 @@ async def delete_activity(activity_id: int, db: db_dependency):
         raise HTTPException(status_code=404, detail="Inputted activity ID not found")
     else:
         db.commit()
+
+@app.post("/activity_ticket/", status_code=status.HTTP_201_CREATED)
+async def book_activity(activity_ticket: ActivityTicket, db: db_dependency):
+    """Create an activity ticket booking."""
+    db_activity_ticket = models.ActivityTicket(**activity_ticket.model_dump())
+    
+    db.add(db_activity_ticket)
+
+    try:
+        db.commit()
+    except IntegrityError as e:
+        db.rollback()
+        print(f"Integrity Error: {e}")
+
+@app.get("/activity_ticket/", response_model=List[ActivityTicket], status_code=status.HTTP_200_OK)
+async def get_activities(db: db_dependency):
+    """Get all the activity tickets booked by the users."""
+    activities = db.query(models.Activity).all()
+    if not activities:
+        raise HTTPException(status_code=404, detail="No activity ticket bookings found")
+    
+    return activities
+
