@@ -318,7 +318,7 @@ async def book_activity(activity_ticket: ActivityTicket, db: db_dependency):
         print(f"Integrity Error: {e}")
 
 @app.get("/activity_ticket/", response_model=List[ActivityTicket], status_code=status.HTTP_200_OK)
-async def get_activities(db: db_dependency):
+async def get_activity_tickets(db: db_dependency):
     """Get all the activity tickets booked by the users."""
     activities = db.query(models.Activity).all()
     if not activities:
