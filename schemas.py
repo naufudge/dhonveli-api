@@ -99,14 +99,14 @@ class Activity(BaseModel):
     id: int | None = None
     name: str | None = None
     description: str | None = None
-    price: int
+    price: int | None = None
 
 
-class ActivityTicket(BaseModel):
-    id: int
-    date_time: datetime
-    total_price: int
-    activity_id: int
+class ActivityTicket(BaseModel): 
+    id: int | None = None
+    date_time: datetime | None = None
+    total_price: int | None = None
+    activity_id: int | None = None
     activity: Activity | None = None
-    user_id: int
+    user_id: int | None = None
     user: User | None = None
