@@ -337,7 +337,7 @@ async def get_activity_tickets(db: db_dependency):
     return activities
 
 @app.delete("/activity_ticket/{activity_ticket_id}")
-async def delete_activity(activity_ticket_id: int, db: db_dependency):
+async def delete_activity_ticket(activity_ticket_id: int, db: db_dependency):
     """Delete an exisitng activity ticket booking."""
     deleted_count = db.query(models.ActivityTicket).filter(models.ActivityTicket.id == activity_ticket_id).delete()
 
