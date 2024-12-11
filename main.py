@@ -327,7 +327,7 @@ async def book_activity(activities: List[ActivityTicket], db: db_dependency):
         db.rollback()
         print(f"Integrity Error: {e}")
 
-@app.get("/activity_ticket/", response_model=List, status_code=status.HTTP_200_OK)
+@app.get("/activity_ticket/", status_code=status.HTTP_200_OK)
 async def get_activity_tickets(db: db_dependency):
     """Get all the activity tickets booked by the users."""
     activities = db.query(models.ActivityTicket).all()
