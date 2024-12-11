@@ -24,6 +24,8 @@ class User(Base):
     loyalty_points = Column(Integer)
     role = Column(String(50), server_default="normal")
 
+    tickets = relationship("ActivityTicket", back_populates="user")
+
 class Hotel(Base):
     __tablename__ = "hotel"
 
@@ -109,15 +111,17 @@ class Activity(Base):
     description = Column(String(250))
     price = Column(Float)
 
+    tickets = relationship("ActivityTicket", back_populates="activity")
+
 class ActivityTicket(Base):
     __tablename__ = "activity_ticket"
 
     id = Column(Integer, primary_key=True, index=True)
-    date_time = Column(DateTime)
+    bookingDate = Column(DateTime)
     total_price = Column(Float)
     
     activity_id = Column(Integer, ForeignKey("activity.id", ondelete="CASCADE"), nullable=False)  
-    activity = relationship("Activity", foreign_keys=[activity_id])
+    activity = relationship("Activity", foreign_keys=[activity_id], back_populates="tickets")
 
     user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"), nullable=True)  
-    user = relationship("User", foreign_keys=[user_id])
+    user = relationship("User", foreign_keys=[user_id], back_populates="tickets")
