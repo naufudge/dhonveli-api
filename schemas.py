@@ -99,7 +99,6 @@ class Activity(BaseModel):
     name: str | None = None
     description: str | None = None
     price: int | None = None
-    tickets: List | None = None   
 
 class ActivityTicket(BaseModel): 
     id: int | None = None
