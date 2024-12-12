@@ -16,6 +16,7 @@ class User(BaseModel):
     email: str
     loyalty_points: int
     role: str
+    tickets: Any | None = None
 
 class UserUpdate(BaseModel):
     loyalty_points: int | None = None
@@ -94,13 +95,12 @@ class CreateHotelBooking(BaseModel):
     user_id: int | None = None
     room_ids: List[int] | None = None
 
-
 class Activity(BaseModel):
     id: int | None = None
     name: str | None = None
     description: str | None = None
     price: int | None = None
-
+    tickets: List | None = None   
 
 class ActivityTicket(BaseModel): 
     id: int | None = None
@@ -110,3 +110,4 @@ class ActivityTicket(BaseModel):
     activity: Activity | None = None
     user_id: int | None = None
     user: User | None = None
+

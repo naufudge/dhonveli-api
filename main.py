@@ -11,7 +11,11 @@ import pymysql
 
 app = FastAPI(title="Dhonveli API")
 
-origins = ["http://localhost:3000", "http://localhost:3001"]
+origins = [
+    "http://localhost:3000", 
+    "http://localhost:3001",
+    "http://10.12.29.67:3000/"
+]
 
 app.add_middleware(
     CORSMiddleware,
@@ -305,11 +309,17 @@ async def delete_activity(activity_id: int, db: db_dependency):
         db.commit()
 
 @app.post("/activity_ticket/", status_code=status.HTTP_201_CREATED)
-async def book_activity(activity_ticket: ActivityTicket, db: db_dependency):
+async def book_activity(activities: List[ActivityTicket], db: db_dependency):
     """Create an activity ticket booking."""
-    db_activity_ticket = models.ActivityTicket(**activity_ticket.model_dump())
+    for activity in activities:
+        db_activity_ticket = models.ActivityTicket(
+            bookingDate = datetime.now(),
+            total_price = activity.total_price,
+            activity_id = activity.activity_id,
+            user_id = activity.user_id
+        )
     
-    db.add(db_activity_ticket)
+        db.add(db_activity_ticket)
 
     try:
         db.commit()
@@ -317,12 +327,21 @@ async def book_activity(activity_ticket: ActivityTicket, db: db_dependency):
         db.rollback()
         print(f"Integrity Error: {e}")
 
-@app.get("/activity_ticket/", response_model=List[ActivityTicket], status_code=status.HTTP_200_OK)
+@app.get("/activity_ticket/", status_code=status.HTTP_200_OK)
 async def get_activity_tickets(db: db_dependency):
     """Get all the activity tickets booked by the users."""
-    activities = db.query(models.Activity).all()
+    activities = db.query(models.ActivityTicket).all()
     if not activities:
         raise HTTPException(status_code=404, detail="No activity ticket bookings found")
     
     return activities
 
+@app.delete("/activity_ticket/{activity_ticket_id}")
+async def delete_activity_ticket(activity_ticket_id: int, db: db_dependency):
+    """Delete an exisitng activity ticket booking."""
+    deleted_count = db.query(models.ActivityTicket).filter(models.ActivityTicket.id == activity_ticket_id).delete()
+
+    if deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Inputted activity ticket ID not found")
+    else:
+        db.commit()
