@@ -163,7 +163,7 @@ async def create_room(room: CreateHotelRoom, db: db_dependency):
 
     db.refresh(db_hotel)
 
-@app.get("/rooms/", response_model=List[HotelRoom], status_code=status.HTTP_200_OK)
+@app.get("/rooms/", status_code=status.HTTP_200_OK)
 async def get_rooms(db: db_dependency):
     """Get all hotel rooms"""
     rooms = db.query(models.Room).all()
