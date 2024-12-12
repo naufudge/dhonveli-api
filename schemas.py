@@ -16,7 +16,6 @@ class User(BaseModel):
     email: str
     loyalty_points: int
     role: str
-    tickets: Any | None = None
 
 class UserUpdate(BaseModel):
     loyalty_points: int | None = None
