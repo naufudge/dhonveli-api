@@ -46,9 +46,6 @@ class HotelBooking(Base):
     user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"), nullable=False)
     user = relationship("User", foreign_keys=[user_id])
 
-    # room_id = Column(Integer, ForeignKey("room.id", ondelete="CASCADE"), nullable=False)   
-    # room = relationship("Room", foreign_keys=[room_id])
-
     rooms = relationship("Room", secondary=hotel_booking_rooms, back_populates="bookings")
 
 
@@ -69,8 +66,6 @@ class Room(Base):
     room_number = Column(String(20))
     occupied = Column(Boolean)
 
-    # booking_id = Column(Integer, ForeignKey("hotel_booking.id", ondelete="CASCADE"), nullable=True)
-    # booking = relationship("HotelBooking", foreign_keys=[booking_id])
     bookings = relationship("HotelBooking", secondary=hotel_booking_rooms, back_populates="rooms")
 
     room_type_id = Column(Integer, ForeignKey("room_type.id", ondelete="CASCADE"), nullable=False)
