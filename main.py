@@ -14,8 +14,7 @@ app = FastAPI(title="Dhonveli API")
 origins = [
     "http://localhost:3000", 
     "http://localhost:3001",
-    "http://10.12.29.67:3000/",
-    "https://dhonveli-production.up.railway.app/"
+    "http://10.12.29.67:3000/"
 ]
 
 app.add_middleware(
