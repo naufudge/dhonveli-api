@@ -1,17 +1,33 @@
-from sqlalchemy import Boolean, Column, Integer, String
+from sqlalchemy import Table, Column, Integer, String, Float, DateTime, ForeignKey, Boolean, BigInteger
+from sqlalchemy.orm import relationship
+from sqlalchemy.sql.expression import text
+from sqlalchemy.sql.sqltypes import TIMESTAMP
 from database import Base
+import pymysql
 
-class Users(Base):
-    __tablename__ = "users"
+pymysql.install_as_MySQLdb()
+
+# Association table between HotelBooking and Room
+hotel_booking_rooms = Table(
+    'hotel_booking_rooms', Base.metadata,
+    Column('hotel_booking_id', Integer, ForeignKey('hotel_booking.id', ondelete="CASCADE"), primary_key=True),
+    Column('room_id', Integer, ForeignKey('room.id', ondelete="CASCADE"), primary_key=True)
+)
+
+class User(Base):
+    __tablename__ = "user"
 
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String(50), unique=True)
-    password = Column()
+    password = Column(String(100))
+    email = Column(String(100), unique=True)
     loyalty_points = Column(Integer)
-    role = Column(String(50))
+    role = Column(String(50), server_default="normal")
 
-class Hotels(Base):
-    __tablename__ = "hotels"
+    tickets = relationship("ActivityTicket", back_populates="user")
+
+class Hotel(Base):
+    __tablename__ = "hotel"
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(50))
@@ -29,9 +45,6 @@ class HotelBooking(Base):
 
     user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"), nullable=False)
     user = relationship("User", foreign_keys=[user_id])
-
-    # room_id = Column(Integer, ForeignKey("room.id", ondelete="CASCADE"), nullable=False)   
-    # room = relationship("Room", foreign_keys=[room_id])
 
     rooms = relationship("Room", secondary=hotel_booking_rooms, back_populates="bookings")
 
@@ -53,8 +66,6 @@ class Room(Base):
     room_number = Column(String(20))
     occupied = Column(Boolean)
 
-    # booking_id = Column(Integer, ForeignKey("hotel_booking.id", ondelete="CASCADE"), nullable=True)
-    # booking = relationship("HotelBooking", foreign_keys=[booking_id])
     bookings = relationship("HotelBooking", secondary=hotel_booking_rooms, back_populates="rooms")
 
     room_type_id = Column(Integer, ForeignKey("room_type.id", ondelete="CASCADE"), nullable=False)

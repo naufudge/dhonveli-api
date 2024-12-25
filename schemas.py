@@ -108,4 +108,3 @@ class ActivityTicket(BaseModel):
     activity: Activity | None = None
     user_id: int | None = None
     user: User | None = None
-
