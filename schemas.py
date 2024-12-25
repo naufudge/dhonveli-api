@@ -57,9 +57,6 @@ class HotelRoom(BaseModel):
     room_type_id: int
     room_type: HotelRoomType | None = None
 
-    class Config:
-        orm_mode = True
-        from_attributes=True
 
 class CreateHotelRoom(BaseModel):
     hotel_room: HotelRoom
@@ -81,9 +78,6 @@ class HotelBookingBase(BaseModel):
     user: User
     rooms: List[HotelRoom]
 
-    class Config:
-        orm_mode = True
-        from_attributes=True
 
 class CreateHotelBooking(BaseModel):
     check_in_date: datetime | Any | None = None
